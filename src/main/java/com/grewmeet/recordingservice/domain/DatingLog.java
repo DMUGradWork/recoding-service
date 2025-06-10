@@ -19,20 +19,22 @@ public class DatingLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long userId;
     private String userName;
     private String title;
     private String description;
     private LocalDateTime dateTime;
 
-    private DatingLog (String userName, String title, String description) {
+    private DatingLog (Long userId, String userName, String title, String description) {
+        this.userId = userId;
         this.userName = userName;
         this.title = title;
         this.description = description;
         this.dateTime = LocalDateTime.now();
     }
 
-    public static DatingLog of(String userName, String title, String description) {
-        return new DatingLog(userName,title,description);
+    public static DatingLog of(Long userId, String userName, String title, String description) {
+        return new DatingLog(userId,userName,title,description);
     }
 
 }

@@ -3,7 +3,6 @@ package com.grewmeet.recordingservice.service;
 import com.grewmeet.recordingservice.domain.Attendance;
 import com.grewmeet.recordingservice.domain.User;
 import com.grewmeet.recordingservice.dto.attendance.AttendanceResponseDto;
-import com.grewmeet.recordingservice.dto.checkin.CheckInResponseDto;
 import com.grewmeet.recordingservice.exception.AlreadyCheckedInException;
 import com.grewmeet.recordingservice.exception.AttendanceNotFoundException;
 import com.grewmeet.recordingservice.exception.UserNotFoundException;
@@ -22,7 +21,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final AttendanceRepository attendanceRepository;
 
     @Override
-    public CheckInResponseDto recordAttendance(Long userId) {
+    public AttendanceResponseDto recordAttendance(Long userId) {
         User user = getUser(userId);
 
         if(isAlreadyAttending(user)) {
@@ -30,7 +29,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
         Attendance checkInRecord = attendanceRepository.save(Attendance.of(user));
-        return CheckInResponseDto.from(checkInRecord);
+        return AttendanceResponseDto.from(checkInRecord);
     }
 
     private boolean isAlreadyAttending(User user) {
@@ -51,10 +50,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     }
 
     @Override
-    public AttendanceResponseDto getLogDetail(Long userId, Long logId) {
-        User user = getUser(userId);
+    public AttendanceResponseDto getLogDetail(Long logId) {
         Attendance attendance = attendanceRepository.findById(logId)
-                .orElseThrow(()-> new AttendanceNotFoundException("user id " + userId + "'s " + "attendance Log " + logId + "is not found"));
+                .orElseThrow(()-> new AttendanceNotFoundException("attendance Log " + logId + "is not found"));
 
         return AttendanceResponseDto.from(attendance);
     }

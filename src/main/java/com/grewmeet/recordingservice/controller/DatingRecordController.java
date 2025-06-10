@@ -31,16 +31,16 @@ public class DatingRecordController {
 
     // 데이팅 참여 내역 조회
     @GetMapping("/{userId}/logs")
-    public ResponseEntity<List<DatingEventLogResponseDto>> getAllDatingEvents(
+    public ResponseEntity<List<DatingEventLogResponseDto>> getAllDatingEventRecords(
             @PathVariable Long userId) {
         return ResponseEntity.ok(datingRecordService.getDatingLogs(userId));
     }
 
     // 데이팅 참여 내역 상세 조회
     @GetMapping("/{userId}/logs/{logId}")
-    public ResponseEntity<DatingEventLogResponseDto> getDatingEvent(
+    public ResponseEntity<DatingEventLogResponseDto> getDatingEventRecord(
             @PathVariable Long userId,
             @PathVariable Long logId) {
-        return ResponseEntity.ok(datingRecordService.getLogDetail(userId, logId));
+        return ResponseEntity.ok(datingRecordService.getLogDetail(logId));
     }
 }

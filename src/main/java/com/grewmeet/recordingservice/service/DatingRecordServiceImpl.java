@@ -4,6 +4,7 @@ import com.grewmeet.recordingservice.domain.DatingLog;
 import com.grewmeet.recordingservice.domain.User;
 import com.grewmeet.recordingservice.dto.dating.DatingEventLogResponseDto;
 import com.grewmeet.recordingservice.dto.dating.DatingEventLoggingRequestDto;
+import com.grewmeet.recordingservice.exception.DatingLogNotFoundException;
 import com.grewmeet.recordingservice.exception.UserNotFoundException;
 import com.grewmeet.recordingservice.repository.DatingLogRepository;
 import com.grewmeet.recordingservice.repository.UserRepository;
@@ -24,6 +25,7 @@ public class DatingRecordServiceImpl implements DatingRecordService {
                 .orElseThrow(() -> new UserNotFoundException("User with id " + request.userId() + " not found"));
 
         DatingLog datingLog = DatingLog.of(
+                user.getId(),
                 user.getUsername(),
                 request.Title(),
                 request.Description());
@@ -33,11 +35,17 @@ public class DatingRecordServiceImpl implements DatingRecordService {
 
     @Override
     public List<DatingEventLogResponseDto> getDatingLogs(Long userId) {
-        return List.of();
+        List<DatingLog> datingLogs = datingLogRepository.findByUserId(userId);
+        return datingLogs.stream()
+                .map(DatingEventLogResponseDto::from)
+                .toList();
     }
 
     @Override
-    public DatingEventLogResponseDto getLogDetail(Long userId, Long logId) {
-        return null;
+    public DatingEventLogResponseDto getLogDetail(Long logId) {
+        DatingLog datingLog = datingLogRepository.findById(logId)
+                .orElseThrow(() -> new DatingLogNotFoundException("Log with id " + logId + " not found"));
+
+        return DatingEventLogResponseDto.from(datingLog);
     }
 }

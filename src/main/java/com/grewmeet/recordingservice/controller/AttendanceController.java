@@ -2,7 +2,6 @@ package com.grewmeet.recordingservice.controller;
 
 
 import com.grewmeet.recordingservice.dto.attendance.AttendanceResponseDto;
-import com.grewmeet.recordingservice.dto.checkin.CheckInResponseDto;
 import com.grewmeet.recordingservice.service.AttendanceService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ public class AttendanceController {
 
     // 출석 체크하기
     @PostMapping("/{userId}/check-in")
-    public ResponseEntity<CheckInResponseDto> checkIn(
+    public ResponseEntity<AttendanceResponseDto> checkIn(
             @PathVariable Long userId) {
-        CheckInResponseDto checkInLog = attendanceService.recordAttendance(userId);
+        AttendanceResponseDto checkInLog = attendanceService.recordAttendance(userId);
         return ResponseEntity.ok(checkInLog);
     }
 
@@ -40,7 +39,7 @@ public class AttendanceController {
     public ResponseEntity<AttendanceResponseDto> getAttendanceLogDetail(
             @PathVariable Long userId,
             @PathVariable Long logId) {
-        return ResponseEntity.ok(attendanceService.getLogDetail(userId, logId));
+        return ResponseEntity.ok(attendanceService.getLogDetail(logId));
     }
 
 }
